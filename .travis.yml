@@ -10,11 +10,13 @@ node_js:
   - "8"
 before_install:
   - if [[ `npm -v` != 5* ]]; then npm install -g npm@5; fi
+  - export CURRENT_NODE_VERSION="$(node -v)"
 install:
   - bundle install --deployment --jobs=3 --retry=3
   - npm install
 after_success:
   - if [ "$TRAVIS_REPO_SLUG" = twbs-savage/bootstrap ]; then npm run docs-upload-preview; fi
+  - if [ ${CURRENT_NODE_VERSION:1:1} = 8 ]; then npm run coveralls; fi
 stages:
   - test
   - name: browser
